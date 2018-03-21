@@ -1,5 +1,14 @@
 {
   "plugins": {
-    "autoprefixer": {}
+    "autoprefixer": {},
+    "postcss-pxtorem":{
+        rootValue: 46.875,
+        unitPrecision: 5,
+        propList: ['*', '!font*'],
+        selectorBlackList: [],
+        replace: true,
+        mediaQuery: false,
+        minPixelValue: 1
+    }
   }
 }

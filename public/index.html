@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
     <title>task2</title>
+    <script >(function(c,b){var a={};(function(){var d=b.querySelector('meta[name="viewport"]'),g=c.devicePixelRatio||1,f=540,h=750;g=g>=3?3:(g>=2?2:1);b.documentElement.setAttribute("data-dpr",g);a.dpr=g;a.maxWidth=f;a.designWidth=h;var i=1/g,e="width=device-width, initial-scale="+i+", minimum-scale="+i+", maximum-scale="+i+", user-scalable=no";if(d){d.setAttribute("content",e)}else{d=b.createElement("meta");d.setAttribute("name","viewport");d.setAttribute("content",e);b.head.appendChild(d)}})();a.px2rem=function(d,e){if(!e){e=parseInt(a.designWidth,10)}return parseInt(d,10)*320/e/20};a.rem2px=function(e,d){if(!d){d=parseInt(a.designWidth,10)}return e*20*d/320};a.mresize=function(){var d=b.documentElement.getBoundingClientRect().width||c.innerWidth;if(a.maxWidth&&(d/a.dpr>a.maxWidth)){d=a.maxWidth*a.dpr}if(!d){return false}b.documentElement.style.fontSize=(d*20/320)+"px";a.callback&&a.callback()};a.mresize();c.addEventListener("resize",function(){clearTimeout(a.tid);a.tid=setTimeout(a.mresize,33)},false);c.addEventListener("load",a.mresize,false);setTimeout(function(){a.mresize()},333)})(window,document);</script>
   </head>
   <body>
     <noscript>
