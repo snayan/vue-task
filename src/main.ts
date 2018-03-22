@@ -2,8 +2,10 @@ import Vue from 'vue';
 import App from './views/App.vue';
 import router from './router';
 import store from './store';
+import './assets/fonticon/iconfont.js';
 import './registerServiceWorker';
-import './scss/reset.scss';
+import './scss/_reset.scss';
+import './scss/global.scss';
 
 Vue.config.productionTip = false;
 
