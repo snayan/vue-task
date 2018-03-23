@@ -2,10 +2,13 @@
   <div class="home" :class="{open}">
     <div class="content">
       <top-nav left="#icon-search"  @left="openSlide" right="#icon-caidan08" />
-      <action />
+      <div :style="resultStyle">
+        <SearchResult @clear="clearSearch" />
+        <action />
+      </div>
     </div>
     <aside class="slide">
-      <slide-search />
+      <search-slide />
     </aside>
   </div>
 </template>
@@ -13,19 +16,31 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import TopNav from '@/components/TopNav.vue';
 import Action from '@/components/Action.vue';
-import SlideSearch from '@/components/SlideSearch.vue';
+import SearchSlide from '@/components/SearchSlide.vue';
+import SearchResult from '@/components/SearchResult.vue';
 
 @Component({
   components: {
     TopNav,
     Action,
-    SlideSearch,
+    SearchSlide,
+    SearchResult,
   },
 })
 export default class Home extends Vue {
-  private open: boolean = true;
+  private open: boolean = false;
+  private resultheight: number = 0;
   private openSlide() {
     this.open = !this.open;
+  }
+  private clearSearch(height: number) {
+    this.resultheight = height;
+  }
+  private get resultStyle() {
+    return {
+      transition: 'all 0.5s ease-out',
+      transform: `translateY(-${this.resultheight}px)`,
+    };
   }
 }
 </script>

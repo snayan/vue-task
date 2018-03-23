@@ -54,6 +54,7 @@ export default class TopNav extends Vue {
   left: 0;
   right: 0;
   height: 80px;
+  z-index: 2;
 }
 .list {
   padding: 0 28px;

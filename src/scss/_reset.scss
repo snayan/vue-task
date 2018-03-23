@@ -50,15 +50,10 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-input:focus {
+input:focus,div:focus,span:focus,button:focus {
   outline: none;
 }
-div:focus{
-  outline: none;
-}
-span:focus{
-  outline: none;
-}
+
 html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
