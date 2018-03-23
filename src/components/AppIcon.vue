@@ -10,7 +10,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 @Component
 export default class AppIcon extends Vue {
   @Prop() private link!: string;
-  @Prop([String, CSSStyleDeclaration]) private iconStyle!: null;
+  @Prop([String, Object]) private iconStyle!: null;
 }
 </script>
 
