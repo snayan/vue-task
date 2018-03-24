@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Sign from '@/views/Sign.vue';
 import Home from '@/views/Home.vue';
 import Detail from '@/views/Detail.vue';
+import Me from '@/views/Me.vue';
 
 Vue.use(Router);
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/detail',
       name: 'detail',
       component: Detail,
+    },
+    {
+      path: '/me',
+      name: 'me',
+      component: Me,
     },
   ],
 });
