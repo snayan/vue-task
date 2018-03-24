@@ -24,7 +24,7 @@ export default class Channel extends Vue {
   height: 40px;
   line-height: 40px;
   max-width: 248px;
-  display: block;
+  // display: block;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
