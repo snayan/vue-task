@@ -20,13 +20,17 @@ export function getCookie(name: string): string {
 export function setCookie(
   name: string,
   value: string,
-  options: CookieOptions,
+  options: CookieOptions = {},
 ): boolean {
   if (!name) {
     return false;
   }
   let stringifiedAttributes: string = '';
-  const attributes: CookieOptions = { path: '/', ...options };
+  const attributes: CookieOptions = {
+    path: '/',
+    expires: 7 * 24 * 60 * 60 * 1000,
+    ...options,
+  };
   if (typeof attributes.expires === 'number') {
     const expires = new Date();
     expires.setMilliseconds(expires.getMilliseconds() + attributes.expires);

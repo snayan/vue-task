@@ -15,7 +15,7 @@ function checkStatus(res: Response) {
     return res.json();
   } else if (status === 403) {
     // invalid token then go login
-    return (window.location.href = '/sign');
+    return (window.location.href = '/');
   } else {
     throw new Error(`[${status}]:${res.statusText}`);
   }

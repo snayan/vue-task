@@ -30,6 +30,8 @@ import { Component, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import px2px from '@/util/px2px';
 import { login } from '@/util/fetch';
+import { saveLogin } from '@/util/session';
+let { token } = require('../../.config.js');
 
 @Component({
   components: {
@@ -46,10 +48,17 @@ export default class Sign extends Vue {
     return px2px(26);
   }
   private login() {
-    this.$toast('11');
-    login('/auth/token', {
-      body: { username: this.user, password: this.password },
-    });
+    if (this.user && this.password) {
+      login('/auth/token', {
+        body: { username: this.user, password: this.password },
+      })
+        .then(res => {
+          saveLogin(res.token);
+        })
+        .catch(e => {
+          this.$toast(e.message);
+        });
+    }
   }
 }
 </script>
