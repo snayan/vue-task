@@ -17,7 +17,7 @@
             <input v-model="password" placeholder="Password" type="password"/>
           </div>
           <div class="submit">
-            <input  type="submit" value="SIGN IN" />
+            <input  type="submit" value="SIGN IN"  @click.stop="login"/>
           </div>
         </form>
       </div>
@@ -29,6 +29,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import px2px from '@/util/px2px';
+import { login } from '@/util/fetch';
 
 @Component({
   components: {
@@ -43,6 +44,12 @@ export default class Sign extends Vue {
   }
   private get userIconSize() {
     return px2px(26);
+  }
+  private login() {
+    this.$toast('11');
+    login('/auth/token', {
+      body: { username: this.user, password: this.password },
+    });
   }
 }
 </script>
