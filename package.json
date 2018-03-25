@@ -11,12 +11,14 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
+    "promise-polyfill": "^7.1.0",
     "register-service-worker": "^1.0.0",
     "vue": "^2.5.13",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^6.0.0",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "@types/chai": "^4.1.0",
