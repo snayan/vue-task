@@ -4,7 +4,7 @@ import { getCookie } from '@/util/cookie';
 const { token } = require('../../.config.js');
 
 interface FetchParams {
-  body?: { [key: string]: string };
+  body?: { [key: string]: any };
   headers?: Headers;
 }
 
@@ -21,40 +21,38 @@ function checkStatus(res: Response) {
   }
 }
 
-function internalFetch(
-  type: 'GET' | 'POST' | 'DELETE',
-  isGetToken: boolean = false,
-) {
-  return (path: string, options: FetchParams) => {
-    let { headers, body } = options;
-    headers = headers instanceof Headers ? headers : new Headers();
-    headers.set('Content-Type', 'application/json');
-    if (!isGetToken) {
-      headers.set(token, getCookie(token));
-    }
-    let stringifyBody;
-    if (body) {
-      let keys = Object.keys(body);
-      if (type === 'GET') {
-        stringifyBody = keys
-          .map((v) => `${v}=${(body as { [key: string]: string })[v]}`)
-          .join('&');
-      } else {
-        stringifyBody = JSON.stringify(body);
+export function internalFetch(type: 'GET' | 'POST' | 'DELETE') {
+  return (isGetToken: boolean = false) => {
+    return (path: string, options: FetchParams = {}) => {
+      let { headers, body } = options;
+      headers = headers instanceof Headers ? headers : new Headers();
+      headers.set('Content-Type', 'application/json');
+      if (!isGetToken) {
+        headers.set(token, getCookie(token));
       }
-    }
-    return fetch(path, {
-      method: type,
-      body: stringifyBody,
-      headers: headers,
-      mode: 'same-origin',
-    }).then(checkStatus);
+      let stringifyBody;
+      if (body) {
+        let keys = Object.keys(body);
+        if (type === 'GET') {
+          stringifyBody = keys
+            .map((v) => `${v}=${(body as { [key: string]: string })[v]}`)
+            .join('&');
+        } else {
+          stringifyBody = JSON.stringify(body);
+        }
+      }
+      return fetch(path, {
+        method: type,
+        body: stringifyBody,
+        headers: headers,
+        mode: 'same-origin',
+      }).then(checkStatus);
+    };
   };
 }
 
-const get = internalFetch('GET');
-const post = internalFetch('POST');
-const deletx = internalFetch('DELETE');
-const login = internalFetch('POST', true);
+const get = internalFetch('GET')();
+const post = internalFetch('POST')();
+const deletx = internalFetch('DELETE')();
 
-export { get, post, deletx, login };
+export { get, post, deletx };
