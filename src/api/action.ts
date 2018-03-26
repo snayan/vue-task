@@ -1,4 +1,5 @@
 import { get } from '@/util/fetch';
+import { stringifPath } from './index';
 
 const PATH = '/events';
 
@@ -12,12 +13,12 @@ interface Filter {
 
 /* 获取活动 */
 export function getActions(options: Filter) {
-  return get(PATH, {
+  return get(stringifPath(PATH), {
     body: { offset: 0, limit: 25, ...options },
   });
 }
 
 /* 获取特定活动 */
 export function getActionById(id: string) {
-  return get(`${PATH}/${id}`);
+  return get(stringifPath(`${PATH}/${id}`));
 }

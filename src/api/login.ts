@@ -4,13 +4,16 @@ import { stringifPath } from './index';
 
 const PATH = '/auth/token';
 
+export interface LoginInfo {
+  username: string;
+  password: string;
+}
+
 /* 登陆 */
-export function login(username: string, password: string) {
+export function login({ username, password }: LoginInfo) {
   return internalFetch('POST')(true)(stringifPath(PATH), {
     body: { username, password },
-  }).then((res) => {
-    saveLogin(res.token);
-  });
+  })
 }
 
 /* 退出 */

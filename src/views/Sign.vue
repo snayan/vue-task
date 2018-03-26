@@ -29,9 +29,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import px2px from '@/util/px2px';
-import { login } from '@/api/login';
-import { saveLogin } from '@/util/session';
-import { setTimeout } from 'timers';
+import { actions } from '@/store/modules/user/CONSTANTS';
 
 @Component({
   components: {
@@ -50,7 +48,12 @@ export default class Sign extends Vue {
   private login() {
     if (this.user && this.password) {
       let cancelLoading = this.$loading();
-      login(this.user, this.password)
+      this.$store
+        .dispatch({
+          type: actions.login,
+          username: this.user,
+          password: this.password,
+        })
         .then(() => {
           cancelLoading();
           let redirect = this.$route.query.redirect;
