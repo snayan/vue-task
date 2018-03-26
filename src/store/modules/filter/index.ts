@@ -1,4 +1,4 @@
-import { ActionTree, ActionContext, MutationTree } from 'vuex';
+import { ActionTree, ActionContext, MutationTree, GetterTree } from 'vuex';
 import { getChannels } from '@/api/channel';
 import { initDateFilter } from '@/util/date';
 import { Channel, Date, Filter } from './filter';

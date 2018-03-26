@@ -1,4 +1,4 @@
-export const PREFIX='filter';
+export const PREFIX = 'filter';
 
 const getChannels = `${PREFIX}/getChannels`;
 

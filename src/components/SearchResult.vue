@@ -1,17 +1,23 @@
 <template>
   <div class="searchResult">
     <p class="result">
-      <span>14 Results</span>
+      <span>{{count}} Results</span>
       <button @click.stop="clear">CLEAR SEARCH</button>
     </p>
-    <p class="filter">Searched for Channel 3 Activities from 20/06 to 24/06</p>
+    <p class="filter">Searched for {{tip}}</p>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop ,Vue } from 'vue-property-decorator';
+import {PREFIX} from '@/store/modules/list/CONSTANTS';
 
 @Component
 export default class SearchResult extends Vue {
+  @Prop({required:true,default:false}) private down!:boolean;
+  @Prop({required:true,default:''}) private tip!:string;
+  private get count(){
+    return this.$store.state[PREFIX]['data'].length||0;
+  }
   private clear() {
     this.$emit('clear', this.$el.getBoundingClientRect().height);
   }

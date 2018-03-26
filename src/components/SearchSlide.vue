@@ -26,14 +26,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Emit, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
-import {
-  PREFIX,
-  Date,
-  Channel,
-  actions,
-} from '@/store/modules/filter/CONSTANTS';
+import { PREFIX, actions } from '@/store/modules/filter/CONSTANTS';
+import { Channel, Date } from '@/store/modules/filter/filter';
 import { actions as listActions } from '@/store/modules/list/CONSTANTS';
 import px2px from '@/util/px2px.ts';
 
@@ -95,6 +91,7 @@ export default class SlideSearch extends Vue {
   private changeAllChannel() {
     this.channels = this.isSelectedAllChannel ? [] : [...this.getChannels];
   }
+
   private search() {
     if (!this.active) {
       return false;
@@ -108,6 +105,7 @@ export default class SlideSearch extends Vue {
       params.channels = this.channels.map(v => v.id).join(',');
     }
     this.$store.dispatch(listActions.getList, params);
+    this.$emit('search', this.searchTip);
   }
   private created() {
     this.$store.dispatch(actions.getChannels);
