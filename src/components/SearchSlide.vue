@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch ,Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import { PREFIX, actions } from '@/store/modules/filter/CONSTANTS';
 import { Channel, Date } from '@/store/modules/filter/filter';
@@ -41,6 +41,7 @@ import px2px from '@/util/px2px.ts';
 export default class SlideSearch extends Vue {
   private time: Date | null = null;
   private channels: Array<Channel> = [];
+  @Prop({required:true,default:false}) private clear!:boolean;
   private get active() {
     return !!(this.time || this.channels.length);
   }
@@ -109,6 +110,11 @@ export default class SlideSearch extends Vue {
   }
   private created() {
     this.$store.dispatch(actions.getChannels);
+  }
+  @Watch('clear')
+  private clearSearch(){
+    this.time=null;
+    this.channels=[];
   }
 }
 </script>

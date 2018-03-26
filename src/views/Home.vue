@@ -13,7 +13,7 @@
       </div>
     </div>
     <aside class="slide">
-      <search-slide @search="search" />
+      <search-slide @search="search" :clear="clear" />
     </aside>
   </div>
 </template>
@@ -39,6 +39,7 @@ import px2px from '@/util/px2px';
 export default class Home extends Vue {
   private open: boolean = false;
   private down: boolean = false;
+  private clear: boolean = false;
   private searchTip: string = '';
   private resultheight: number = 0;
   private get resultStyle() {
@@ -61,11 +62,14 @@ export default class Home extends Vue {
   private search(tip: string) {
     this.toggleSlide();
     this.down = true;
+    this.clear = false;
     this.resultheight = 0;
     this.searchTip = tip;
   }
   private clearSearch(height: number) {
     this.resultheight = -height;
+    this.clear = true;
+    this.$store.dispatch(actions.getList);
   }
   private created() {
     this.$store.dispatch(actions.getList);
