@@ -3,5 +3,4 @@
 module.exports = {
   devServer: 'http://localhost:3000',
   proServer: 'http://localhost:3000',
-  token: 'X-BLACKCAT-TOKEN',
 };

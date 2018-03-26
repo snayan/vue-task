@@ -17,7 +17,7 @@
             <input v-model="password" placeholder="Password" type="password"/>
           </div>
           <div class="submit">
-            <input  type="submit" value="SIGN IN"  @click.stop="login"/>
+            <input  type="submit" value="SIGN IN"  @click.stop.prevent="login"/>
           </div>
         </form>
       </div>
@@ -29,9 +29,9 @@
 import { Component, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import px2px from '@/util/px2px';
-import { login } from '@/util/fetch';
+import { login } from '@/api/login';
 import { saveLogin } from '@/util/session';
-let { token } = require('../../.config.js');
+import { setTimeout } from 'timers';
 
 @Component({
   components: {
@@ -49,13 +49,15 @@ export default class Sign extends Vue {
   }
   private login() {
     if (this.user && this.password) {
-      login('/auth/token', {
-        body: { username: this.user, password: this.password },
-      })
-        .then(res => {
-          saveLogin(res.token);
+      let cancelLoading = this.$loading();
+      login(this.user, this.password)
+        .then(() => {
+          cancelLoading();
+          let redirect = this.$route.query.redirect;
+          this.$router.push(redirect ? { path: redirect } : 'home');
         })
-        .catch(e => {
+        .catch((e: Error) => {
+          cancelLoading();
           this.$toast(e.message);
         });
     }

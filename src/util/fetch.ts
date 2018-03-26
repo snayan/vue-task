@@ -1,7 +1,7 @@
 /* fetch api  */
 
 import { getCookie } from '@/util/cookie';
-const { token } = require('../../.config.js');
+import { TOKEN } from '@/util/session';
 
 interface FetchParams {
   body?: { [key: string]: any };
@@ -28,7 +28,7 @@ export function internalFetch(type: 'GET' | 'POST' | 'DELETE') {
       headers = headers instanceof Headers ? headers : new Headers();
       headers.set('Content-Type', 'application/json');
       if (!isGetToken) {
-        headers.set(token, getCookie(token));
+        headers.set(TOKEN, getCookie(TOKEN));
       }
       let stringifyBody;
       if (body) {

@@ -13,7 +13,16 @@ body,
   height: 100%;
   width: 100%;
 }
-body{
+body {
   width: 16rem;
   margin: 0 auto;
+}
+
+@keyframes circle_rotating {
+  0% {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(1turn);
+  }
 }
