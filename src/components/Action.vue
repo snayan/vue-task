@@ -1,33 +1,33 @@
 <template>
   <section class="action">
     <header class="head">
-      <app-icon link="#icon-caidan08" :iconStyle="userIconStyle"  />
-      <span class="userName">Username</span>
-      <channel value="Channel name" style="flex:0 0 auto;align-self: flex-end;" />
+      <img class="avator" :src="item.creator.avatar" />
+      <span class="userName">{{item.creator.username}}</span>
+      <channel :value="item.channel.name" style="flex:0 0 auto;align-self: flex-end;" />
     </header>
     <div class="info">
       <div class="txt">
-        <h2 class="title">Activity Title Name Make it Longer May Longer than One Line</h2>
+        <h2 class="title">{{item.name}}</h2>
         <div class="time">
           <app-icon link="#icon-clock" :iconStyle="clockIconStyle" />
-          <p>14 May 2016 12:22 - 14 May 2016 18:00</p>
+          <p>{{actionTime}}</p>
         </div>
         <p class="content">
-          [No longer than 300 chars] Vivamus sagittis, diam in lobortis, sapien arcu mattis erat, vel aliquet sem urna et risus. Ut feugiat sapien mi potenti...
+          {{item.description}}
         </p>
       </div>
-      <div class="img">
-        <img src="../assets/imgs/action.jpg" />
+      <div class="img" v-if="item.images.length">
+        <img :src="item.images[0]" />
       </div>
     </div>
     <div class="operation">
       <div class=" item go">
-        <app-icon link="#icon-right" />
-        <span>I am going!</span>
+        <app-icon link="#icon-right" :iconStyle="goIconStyle" />
+        <span>{{item.me_going?'I am going!':`${item.going_count} Going`}}</span>
       </div>
       <div class="item like">
-        <app-icon link="#icon-custom-love" />
-        <span>I like it</span>
+        <app-icon link="#icon-custom-love" :iconStyle="likeIconStyle" />
+        <span>{{item.me_likes?'I like it':`${item.likes_count} Likes`}}</span>
       </div>
     </div>
   </section>
@@ -37,6 +37,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import Channel from '@/components/Channel.vue';
 import px2px from '@/util/px2px';
+import { toLocalString } from '@/util/date';
+import { Action } from '@/store/modules/list/list.d';
 
 @Component({
   components: {
@@ -45,6 +47,8 @@ import px2px from '@/util/px2px';
   },
 })
 export default class AppAction extends Vue {
+  @Prop({ required: true })
+  private item!: Action;
   private get userIconStyle() {
     return {
       fontSize: px2px(40),
@@ -56,6 +60,21 @@ export default class AppAction extends Vue {
       fontSize: px2px(24),
       flex: '0 0 auto',
     };
+  }
+  private get goIconStyle(){
+    return {
+      fontSize:px2px(24),
+      color:this.item.me_going?'#AECB4F':'#AC8EC9'
+    }
+  }
+  private get likeIconStyle(){
+    return {
+      fontSize:px2px(24),
+      color:this.item.me_likes?'#FF5C5C':'#AC8EC9',
+    }
+  }
+  private get actionTime(){
+    return toLocalString(this.item.begin_time)+' - '+toLocalString(this.item.end_time);
   }
 }
 </script>
@@ -79,6 +98,12 @@ export default class AppAction extends Vue {
   height: 40px;
   display: flex;
   align-items: center;
+}
+.avator {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 .userName {
   @include px2px(font-size,24);

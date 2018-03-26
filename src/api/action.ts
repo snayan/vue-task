@@ -3,7 +3,7 @@ import { stringifPath } from './index';
 
 const PATH = '/events';
 
-interface Filter {
+export interface Filter {
   after?: number;
   before?: number;
   channels?: string;

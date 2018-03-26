@@ -1,7 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import user from './modules/user';
-import { saveLogin, loginOut } from '@/util/session';
+import list from './modules/list';
+import filter from './modules/filter';
+import { saveLogin, loginOut, TOKEN } from '@/util/session';
+import { getCookie } from '@/util/cookie';
 
 Vue.use(Vuex);
 
@@ -10,16 +13,9 @@ const debug = process.env.NODE_ENV !== 'production';
 export default new Vuex.Store({
   strict: debug,
   state: {
-    requesting: false,
-    token: null,
+    token: getCookie(TOKEN),
   },
   mutations: {
-    showLoading(state) {
-      state.requesting = true;
-    },
-    hideLoading(state) {
-      state.requesting = false;
-    },
     saveToken(state, token) {
       state.token = token;
       saveLogin(token);
@@ -27,5 +23,7 @@ export default new Vuex.Store({
   },
   modules: {
     user,
+    list,
+    filter,
   },
 });

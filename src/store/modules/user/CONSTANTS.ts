@@ -1,4 +1,4 @@
-const PREFIX = 'user';
+export const PREFIX = 'user';
 
 const login = `${PREFIX}/login`;
 

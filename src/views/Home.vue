@@ -4,7 +4,9 @@
       <top-nav left="#icon-search"  @left="openSlide" right="#icon-caidan08" />
       <div :style="resultStyle">
         <SearchResult @clear="clearSearch" />
-        <action />
+        <template v-for="item in lists" >
+          <action :key="item.id" :item="item"   />
+        </template>
       </div>
     </div>
     <aside class="slide">
@@ -18,6 +20,7 @@ import TopNav from '@/components/TopNav.vue';
 import Action from '@/components/Action.vue';
 import SearchSlide from '@/components/SearchSlide.vue';
 import SearchResult from '@/components/SearchResult.vue';
+import { actions, PREFIX } from '@/store/modules/list/CONSTANTS';
 
 @Component({
   components: {
@@ -30,17 +33,23 @@ import SearchResult from '@/components/SearchResult.vue';
 export default class Home extends Vue {
   private open: boolean = false;
   private resultheight: number = 0;
+  private get resultStyle() {
+    return {
+      transition: 'all 0.5s ease-out',
+      transform: `translateY(-${this.resultheight}px)`,
+    };
+  }
+  private get lists() {
+    return this.$store.state[PREFIX]['data'];
+  }
   private openSlide() {
     this.open = !this.open;
   }
   private clearSearch(height: number) {
     this.resultheight = height;
   }
-  private get resultStyle() {
-    return {
-      transition: 'all 0.5s ease-out',
-      transform: `translateY(-${this.resultheight}px)`,
-    };
+  private created() {
+    this.$store.dispatch(actions.getList);
   }
 }
 </script>
@@ -64,7 +73,7 @@ export default class Home extends Vue {
   }
 }
 .slide {
-  position: absolute;
+  position: fixed;
   left: 0;
   width: 480px;
   top: 0;
@@ -72,6 +81,7 @@ export default class Home extends Vue {
   overflow: hidden;
   transform: translateX(-100%);
   transition: all 0.5s ease;
+  z-index: 3;
   .open & {
     transform: translateX(0);
   }

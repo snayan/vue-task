@@ -20,7 +20,6 @@ const state = () => ({
 /* user actions */
 const actions: ActionTree<User, RootState> = {
   login({ commit, state }: ActionContext<User, RootState>, payload: LoginInfo) {
-    commit('showLoading', null, { root: true });
     return login(payload).then(
       ({ token, user }: { token: string; user: User }) => {
         commit('saveToken', token, { root: true });

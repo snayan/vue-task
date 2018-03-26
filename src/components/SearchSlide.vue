@@ -3,36 +3,21 @@
     <div class="date">
       <p><span class="title">DATE</span></p>
       <div class="list">
-        <span class="item date_item" :class="{active:time && time.value==='all'}" @click.stop="changeTime('all','ANYTIME')">ANYTIME</span>
-        <span class="item date_item" :class="{active:time && time.value==='today'}" @click.stop="changeTime('today','TODAY')">TODAY</span>
-        <span class="item date_item" :class="{active:time && time.value==='tomrrow'}"  @click.stop="changeTime('tomrrow','TOMORROW')">TOMORROW</span>
-        <span class="item date_item" :class="{active:time && time.value==='week'}" @click.stop="changeTime('week','THIS WEEK')">THIS WEEK</span>
-        <span class="item date_item" :class="{active:time && time.value==='month'}" @click.stop="changeTime('month','THIS MONTH')">THIS MONTH</span>
-        <span class="item date_item" :class="{active:time && time.value==='later'}" @click.stop="changeTime('later','LATER')">LATER</span>
+        <span v-for="item in getDates" :key="item.value" class="item date_item" :class="{active:time && time.value===item.value}" @click.stop="changeTime(item)">{{item.name}}</span>
       </div>
     </div>
     <div class="channel">
       <p><span class="title">CHANNEL</span></p>
       <div class="list">
-        <span class="item channel_item" :class="{active:channel && channel.value==='all'}" @click.stop="changeChannel('all','ALl Channel')">All</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='1'}" @click.stop="changeChannel('1','Channel 1')">Channel 1</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='2'}" @click.stop="changeChannel('2','Channel 2')">Channel 2</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='3'}" @click.stop="changeChannel('3','Channel 3')">Channel 3</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='4'}" @click.stop="changeChannel('4','Channel 4')">Channel 4</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='5'}" @click.stop="changeChannel('5','Short')">Short</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='6'}" @click.stop="changeChannel('6','Short')">Short</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='7'}" @click.stop="changeChannel('7','Channel 4')">Channel 4</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='8'}" @click.stop="changeChannel('8','Channel 4')">Channel 4</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='9'}" @click.stop="changeChannel('9','Channel 4')">Channel 4</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='10'}" @click.stop="changeChannel('10','Channel Long Name')">Channel Long Name</span>
-        <span class="item channel_item" :class="{active:channel && channel.value==='11'}" @click.stop="changeChannel('11','Channel 1')">Channel 1</span>
+        <span class="item channel_item" :class="{active:isSelectedAllChannel}" @click.stop="changeAllChannel()">All</span>
+        <span v-for="item in getChannels" :key="item.id" class="item channel_item" :class="{active: ~channels.map(v=>v.id+',').join('').indexOf(item.id+',')}" @click.stop="changeChannel(item)">{{item.name}}</span>
       </div>
     </div>
-    <div class="search">
+    <div class="search" @click.stop="search">
       <div class="search_btn" type="button" >
-        <p>
+        <p class="search_txt">
           <app-icon link="#icon-search"  />
-          SEARCH
+          <span>SEARCH</span>
         </p>
         <p class="search_tip" v-if="active">{{searchTip}}</p>
       </div>
@@ -43,12 +28,14 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
+import {
+  PREFIX,
+  Date,
+  Channel,
+  actions,
+} from '@/store/modules/filter/CONSTANTS';
+import { actions as listActions } from '@/store/modules/list/CONSTANTS';
 import px2px from '@/util/px2px.ts';
-
-interface Filter {
-  name: string;
-  value: string;
-}
 
 @Component({
   components: {
@@ -56,35 +43,26 @@ interface Filter {
   },
 })
 export default class SlideSearch extends Vue {
-  private time: Filter | null = null;
-  private channel: Filter | null = null;
-  private changeTime(value: string, name: string) {
-    if (!this.time) {
-      this.time = { name: '', value: '' };
-    }
-    this.time = this.time.value === value ? null : { name, value };
-  }
-  private changeChannel(value: string, name: string) {
-    if (!this.channel) {
-      this.channel = { name: '', value: '' };
-    }
-    this.channel = this.channel.value === value ? null : { name, value };
-  }
+  private time: Date | null = null;
+  private channels: Array<Channel> = [];
   private get active() {
-    return !!(this.time || this.channel);
+    return !!(this.time || this.channels.length);
   }
   private get searchTip() {
     let val = '';
-    if (
-      this.time &&
-      this.time.value === 'all' &&
-      this.channel &&
-      this.channel.value === 'all'
-    ) {
+    if (this.time && this.time.value === 'all' && this.isSelectedAllChannel) {
       return 'All activities';
     }
-    if (this.channel && this.channel.value) {
-      val = this.channel.name;
+    if (this.isSelectedAllChannel) {
+      val = 'All channels';
+    } else if (this.channels.length) {
+      val = this.channels.reduce((s, v, i) => {
+        return (s += i < 3 ? v.name + ',' : '');
+      }, '');
+      val = val.slice(0, val.length - 1);
+      if (this.channels.length > 3) {
+        val += ',...';
+      }
       if (this.time && this.time.value) {
         val += ' from ';
       }
@@ -93,6 +71,46 @@ export default class SlideSearch extends Vue {
       val += this.time.name;
     }
     return val;
+  }
+  private get getDates() {
+    return this.$store.state[PREFIX]['dates'];
+  }
+  private get getChannels() {
+    return this.$store.state[PREFIX]['channels'];
+  }
+  private get isSelectedAllChannel() {
+    return this.channels.length === this.getChannels.length;
+  }
+  private changeTime(item: Date) {
+    this.time = this.time === item ? null : item;
+  }
+  private changeChannel(item: Channel) {
+    let channels = this.channels.filter(v => v.id === item.id);
+    if (channels.length) {
+      this.channels = this.channels.filter(v => v.id !== item.id);
+    } else {
+      this.channels = [...this.channels, item];
+    }
+  }
+  private changeAllChannel() {
+    this.channels = this.isSelectedAllChannel ? [] : [...this.getChannels];
+  }
+  private search() {
+    if (!this.active) {
+      return false;
+    }
+    let params = Object.create(null);
+    if (this.time && this.time.value !== 'all') {
+      params.after = this.time.start;
+      params.before = this.time.end;
+    }
+    if (this.channels.length) {
+      params.channels = this.channels.map(v => v.id).join(',');
+    }
+    this.$store.dispatch(listActions.getList, params);
+  }
+  private created() {
+    this.$store.dispatch(actions.getChannels);
   }
 }
 </script>
@@ -175,6 +193,14 @@ export default class SlideSearch extends Vue {
   .active & {
     background: $themeMain;
     color: $slideBgColor;
+  }
+}
+.search_txt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  span {
+    margin-left: 12px;
   }
 }
 .search_tip {
