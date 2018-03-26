@@ -23,7 +23,7 @@ let router = new Router({
       meta: { requiredAuth: true },
     },
     {
-      path: '/detail',
+      path: '/home/:id',
       name: 'detail',
       component: Detail,
       meta: { requiredAuth: true },

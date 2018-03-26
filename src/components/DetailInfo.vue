@@ -1,15 +1,10 @@
 <template>
   <div class="info">
-    <div class="img">
-      <img src='../assets/imgs/action.jpg' />
-      <img src='../assets/imgs/action.jpg' />
-      <img src='../assets/imgs/action.jpg' />
-      <img src='../assets/imgs/action.jpg' />
+    <div class="img" v-if="images && images.length">
+      <img v-for="item in images" :key="item" :src='item' />
     </div>
     <div class="txt">
-      <p>
-        [No longer than 300 chars] Vivamus sagittis, diam in lobortis, sapien arcu mattis erat, vel aliquet sem urna et risus. Ut feugiat sapien mi potenti. Maecenas et enim odio. Nullam massa metus, varius quis vehicula sed, pharetra mollis erat. In quis viverra velit. Vivamus placerat, est nec hendrerit varius, enim dui hendrerit magna, ut pulvinar nibh lorem vel lacus. Mauris a orci iaculis, hendrerit eros sed, gravida leo. In dictum mauris vel augue varius there is south north asim
-      </p>
+      <p>{{description}}</p>
     </div>
     <div class="when">
       <p class="when_title">When</p>
@@ -17,37 +12,58 @@
         <div class="when_start">
           <p class="when_date">
             <app-icon iconStyle="color:#aecb4f;"  link="#icon-right1"/>
-            <span>15 April 2015</span>
+            <span>{{beginDate}}</span>
           </p>
-          <p class="when_time">8:30<span>am</span></p>
+          <p class="when_time">{{beginTime.value}}<span>{{beginTime.am?'am':'pm'}}</span></p>
         </div>
         <div class="when_end">
           <p class="when_date">
             <app-icon iconStyle="color:#aecb4f;" link="#icon-left"/>
-            <span>15 April 2015</span>
+            <span>{{endDate}}</span>
           </p>
+          <p class="when_time">{{endTime.value}}<span>{{endTime.am?'am':'pm'}}</span></p>
         </div>
       </div>
     </div>
     <div class="where">
       <p class="where_title">Where</p>
-      <p class="where_location">Marina Bay Sands</p>
-      <p class="where_address">10 Bayfront Ave, S018956</p>
+      <p class="where_location">{{location}}</p>
+      <p class="where_address">{{address}}</p>
       <img class="where_img" src="../assets/imgs/gmap.png" />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
-import px2px from '@/util/px2px.ts';
+import px2px from '@/util/px2px';
+import {toLocalString,toLocalTime} from '@/util/date';
 
 @Component({
   components: {
     AppIcon,
   },
 })
-export default class DetailInfo extends Vue {}
+export default class DetailInfo extends Vue {
+  @Prop({required:false,type:Array}) private images!:Array<string>;
+  @Prop({required:true}) private description!:string;
+  @Prop({required:true}) private begin!:string;
+  @Prop({required:true}) private end!:string;
+  @Prop({required:true}) private location!:string;
+  @Prop({required:true}) private address!:string;
+  private get beginDate(){
+    return toLocalString(this.begin);
+  }
+  private get beginTime(){
+    return toLocalTime(this.begin);
+  }
+  private get endDate(){
+    return toLocalString(this.end);
+  }
+  private get endTime(){
+    return toLocalTime(this.end);
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import '../scss/theme.scss';
@@ -64,16 +80,16 @@ export default class DetailInfo extends Vue {}
   margin: 0 -32px;
   img {
     flex: 0 0 auto;
-    margin: 0 12px;
+    padding: 0 12px;
     width: 360px;
     height: 200px;
     -webkit-overflow-scrolling: touch;
   }
   img:first-child {
-    margin-left: 32px;
+    padding-left: 32px;
   }
   img:last-child {
-    margin-right: 32px;
+    padding-right: 32px;
   }
 }
 .txt {
@@ -112,7 +128,7 @@ export default class DetailInfo extends Vue {}
     }
   }
 }
-.where{
+.where {
   padding-bottom: 0;
 }
 .when_content {
@@ -164,7 +180,7 @@ export default class DetailInfo extends Vue {}
   color: #666666;
   margin-bottom: 16px;
 }
-.where_img{
+.where_img {
   width: 100%;
   border-radius: 24px;
 }

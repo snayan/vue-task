@@ -1,4 +1,4 @@
-import { ActionTree, ActionContext, MutationTree } from 'vuex';
+import { ActionTree, ActionContext, GetterTree, MutationTree } from 'vuex';
 import { getActions, getActionById, Filter } from '@/api/action';
 import { getChannels } from '@/api/channel';
 import { Action, List } from './list';
@@ -10,6 +10,18 @@ const state = () => ({
   data: [],
   has_more: true,
 });
+
+const getters: GetterTree<List, RootState> = {
+  getDetail(state) {
+    return (id: number) => {
+      let finds = state.data.filter((v) => v.id === id);
+      if (finds.length) {
+        return finds[0];
+      }
+      return null;
+    };
+  },
+};
 
 const actions: ActionTree<List, RootState> = {
   getList({ commit, state }, payload: Filter) {
@@ -52,6 +64,7 @@ const mutations: MutationTree<List> = {
 
 export default {
   state,
+  getters,
   actions,
   mutations,
   namespaced,

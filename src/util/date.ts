@@ -1,8 +1,31 @@
-/* 格式化日期为本地格式 */
+/* 格式化日期为本地日期格式 */
 export function toLocalString(d: Date | number | string) {
   try {
     let v = d instanceof Date ? d : new Date(d + '');
     return v.toLocaleDateString();
+  } catch (e) {
+    return d;
+  }
+}
+
+/* 格式化日期为本地时间格式 */
+export function toLocalTime(d: Date | number | string) {
+  try {
+    let v = d instanceof Date ? d : new Date(d + '');
+    let am = false;
+    let pm = false;
+    let hours = v.getHours();
+    let minutes = v.getMinutes();
+    pm = hours > 12;
+    am = !pm;
+    if (pm) {
+      hours = hours - 12;
+    }
+    return {
+      value: `${hours}:${minutes}`,
+      am,
+      pm,
+    };
   } catch (e) {
     return d;
   }

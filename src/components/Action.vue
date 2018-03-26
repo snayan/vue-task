@@ -1,36 +1,38 @@
 <template>
-  <section class="action">
-    <header class="head">
-      <img class="avator" :src="item.creator.avatar" />
-      <span class="userName">{{item.creator.username}}</span>
-      <channel :value="item.channel.name" style="flex:0 0 auto;align-self: flex-end;" />
-    </header>
-    <div class="info">
-      <div class="txt">
-        <h2 class="title">{{item.name}}</h2>
-        <div class="time">
-          <app-icon link="#icon-clock" :iconStyle="clockIconStyle" />
-          <p>{{actionTime}}</p>
+  <router-link :to="navagateTo">
+      <section class="action">
+      <header class="head">
+        <img class="avator" :src="item.creator.avatar" />
+        <span class="userName">{{item.creator.username}}</span>
+        <channel :value="item.channel.name" style="flex:0 0 auto;align-self: flex-end;" />
+      </header>
+      <div class="info">
+        <div class="txt">
+          <h2 class="title">{{item.name}}</h2>
+          <div class="time">
+            <app-icon link="#icon-clock" :iconStyle="clockIconStyle" />
+            <p>{{actionTime}}</p>
+          </div>
+          <p class="content">
+            {{item.description}}
+          </p>
         </div>
-        <p class="content">
-          {{item.description}}
-        </p>
+        <div class="img" v-if="item.images.length">
+          <img :src="item.images[0]" />
+        </div>
       </div>
-      <div class="img" v-if="item.images.length">
-        <img :src="item.images[0]" />
+      <div class="operation">
+        <div class=" item go">
+          <app-icon link="#icon-right" :iconStyle="goIconStyle" />
+          <span>{{item.me_going?'I am going!':`${item.going_count} Going`}}</span>
+        </div>
+        <div class="item like">
+          <app-icon link="#icon-custom-love" :iconStyle="likeIconStyle" />
+          <span>{{item.me_likes?'I like it':`${item.likes_count} Likes`}}</span>
+        </div>
       </div>
-    </div>
-    <div class="operation">
-      <div class=" item go">
-        <app-icon link="#icon-right" :iconStyle="goIconStyle" />
-        <span>{{item.me_going?'I am going!':`${item.going_count} Going`}}</span>
-      </div>
-      <div class="item like">
-        <app-icon link="#icon-custom-love" :iconStyle="likeIconStyle" />
-        <span>{{item.me_likes?'I like it':`${item.likes_count} Likes`}}</span>
-      </div>
-    </div>
-  </section>
+    </section>
+  </router-link>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -76,11 +78,17 @@ export default class AppAction extends Vue {
   private get actionTime(){
     return toLocalString(this.item.begin_time)+' - '+toLocalString(this.item.end_time);
   }
+  private get navagateTo(){
+    return '/home/'+this.item.id;
+  }
 }
 </script>
 <style lang="scss" scoped>
 @import '../scss/theme.scss';
 @import '../scss/_px2px.scss';
+a {
+  text-decoration: none;
+}
 .action {
   padding: 32px;
   position: relative;

@@ -3,25 +3,19 @@
     <div class="item go">
       <div class="head">
         <app-icon link="#icon-right" iconStyle="color:#AC8EC9" />
-        <span>34 going</span>
+        <span>{{participants.length}} going</span>
       </div>
       <div class="avator">
-        <img src="../assets/imgs/action.jpg" />
-        <img src="../assets/imgs/action.jpg" />
-        <img src="../assets/imgs/action.jpg" />
-        <img src="../assets/imgs/action.jpg" />
+        <img v-for="item in participants" :key="item.id" :src="item.avatar" />
       </div>
     </div>
     <div class="item  like">
       <div class="head">
         <app-icon link="#icon-custom-love" iconStyle="color:#AC8EC9" />
-        <span>7 likes</span>
+        <span>{{likes.length}} likes</span>
       </div>
       <div class="avator">
-        <img src="../assets/imgs/action.jpg" />
-        <img src="../assets/imgs/action.jpg" />
-        <img src="../assets/imgs/action.jpg" />
-        <img src="../assets/imgs/action.jpg" />
+        <img v-for="item in likes" :key="item.id" :src="item.avatar" />
       </div>
     </div>
   </div>
@@ -30,13 +24,38 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
+import { getParticipantsByAId } from '@/api/participant';
+import { getLikesByAId } from '@/api/like';
+import { User } from '@/store/modules/user/user';
 
 @Component({
   components: {
     AppIcon,
   },
 })
-export default class DetailParticipants extends Vue {}
+export default class DetailParticipants extends Vue {
+  private participants: Array<User> = [];
+  private likes: Array<User> = [];
+  private get actionId() {
+    return this.$route.params.id;
+  }
+  private created() {
+    getParticipantsByAId(this.actionId)
+      .then(({ users }: { users: Array<User> }) => {
+        this.participants = [...users];
+      })
+      .catch((e: Error) => {
+        this.$toast(e.message);
+      });
+    getLikesByAId(this.actionId)
+      .then(({ users }: { users: Array<User> }) => {
+        this.likes = [...users];
+      })
+      .catch((e: Error) => {
+        this.$toast(e.message);
+      });
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -52,7 +71,7 @@ export default class DetailParticipants extends Vue {}
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 120px;
+  min-height: 120px;
 }
 .go {
   position: relative;
@@ -78,11 +97,12 @@ export default class DetailParticipants extends Vue {}
   flex: 1 1 auto;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   img {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    margin: 0 7px;
+    padding: 12px 7px;
   }
 }
 </style>

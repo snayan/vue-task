@@ -1,21 +1,21 @@
 <template>
-  <div class="detail">
-    <top-nav left='#icon-home' right='#icon-caidan08' />
+  <div v-if="actionData" class="detail">
+    <top-nav left='#icon-home' @left="navagateToHome" right='#icon-caidan08' />
     <div class="short_info">
-      <channel  value='Channel name'/>
-      <h2 class="title">Activity Title Name Make it Longer May Longer than One Line</h2>
+      <channel  :value='actionData.channel.name'/>
+      <h2 class="title">{{actionData.name}}</h2>
       <div class="user">
-        <img class="user_img" src='../assets/imgs/action.jpg' />
+        <img class="user_img" :src='actionData.creator.avatar' />
         <div class="user_info">
-          <span>Username</span>
-          <span>Published 2 days ago</span>
+          <span>{{actionData.creator.username}}</span>
+          <span>{{actionData.createdAt}}</span>
         </div>
       </div>
     </div>
     <detail-nav />
     <div class="content">
-      <detail-info />
-      <detail-participants />
+      <detail-info :images="actionData.images" :description="actionData.description" :begin="actionData.begin_time" :end="actionData.end_time" :location="actionData.location" :address="actionData.location_detail"/>
+      <detail-participants :goes="actionData.going_count" :likes="actionData.likes_count" />
       <detail-comments />
     </div>
     <detail-operation />
@@ -34,6 +34,9 @@ import DetailParticipants from '@/components/DetailParticipants.vue';
 import DetailComments from '@/components/DetailComments.vue';
 import DetailOperation from '@/components/DetailOperation.vue';
 import DetailReply from '@/components/DetailReply.vue';
+import { PREFIX } from '@/store/modules/list/CONSTANTS';
+import { Action } from '@/store/modules/list/list';
+import { getActionById } from '@/api/action';
 
 @Component({
   components: {
@@ -48,7 +51,31 @@ import DetailReply from '@/components/DetailReply.vue';
     DetailReply,
   },
 })
-export default class Detail extends Vue {}
+export default class Detail extends Vue {
+  private actionData: Action | null = null;
+  private get actionId() {
+    return this.$route.params.id;
+  }
+  private navagateToHome() {
+    this.$router.push({ name: 'home' });
+  }
+  private created() {
+    let data = this.$store.getters[`${PREFIX}/getDetail`](this.actionId);
+    if (data && data.id === this.actionId) {
+      return (this.actionData = { ...data });
+    }
+    let cancelLoading = this.$loading();
+    getActionById(this.actionId)
+      .then(({ event }: { event: Action }) => {
+        this.actionData = { ...event };
+        cancelLoading();
+      })
+      .catch((e: Error) => {
+        cancelLoading();
+        this.$toast(e.message);
+      });
+  }
+}
 </script>
 
 <style lang="scss" scoped>
