@@ -17,7 +17,7 @@
             {{item.description}}
           </p>
         </div>
-        <div class="img" v-if="item.images.length">
+        <div class="img" v-if="item.images && item.images.length">
           <img :src="item.images[0]" />
         </div>
       </div>

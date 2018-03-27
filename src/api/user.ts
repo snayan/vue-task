@@ -3,7 +3,7 @@ import { stringifPath } from './index';
 import { hasLogin } from '@/util/session';
 const PATH = '/user';
 
-interface Filter {
+export interface Filter {
   type: 'liked' | 'going' | 'past';
   offset?: number;
   limit?: number;

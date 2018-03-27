@@ -3,53 +3,96 @@
     <top-nav left="#icon-home" @left="navagateToHome" right="#icon-caidan08" />
     <div class="content">
       <div class="info">
-        <img class="avator" src="../assets/imgs/action.jpg" />
-        <p class="name">Username</p>
+        <img class="avator" :src="user.avatar" />
+        <p class="name">{{user.username}}</p>
         <p class="email">
           <app-icon link="#icon-email" :iconStyle="iconStyle" />
-          <span>myusername@gmail.com</span>
+          <span>{{user.email}}</span>
         </p>
       </div>
       <nav class="nav">
-        <a class="item active">
+        <a class="item" :class="{active:type==='liked'}" @click.stop.prevent="changeTab('liked')">
           <app-icon link="#icon-custom-love" :iconStyle="iconStyle" />
-          <span>12 likes</span>
+          <span>{{user.likes_count||0}} likes</span>
         </a>
-        <a class="item">
+        <a class="item" :class="{active:type==='going'}" @click.stop.prevent="changeTab('going')">
           <app-icon link="#icon-right" :iconStyle="iconStyle" />
-          <span>0 Going</span>
+          <span>{{user.goings_count||0}} Going</span>
         </a>
-        <a class="item">
+        <a class="item" :class="{active:type==='past'}" @click.stop.prevent="changeTab('past')">
           <app-icon link="#icon-other" :iconStyle="iconStyle" />
-          <span>0 Past</span>
+          <span>{{user.past_count||0}} Past</span>
         </a>
       </nav>
-      <component :is="co"/>
+      <div v-if="actions.length">
+        <action v-for="value in actions" :key="value.id" :item="value" />
+      </div>
+      <empty v-else />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import TopNav from '@/components/TopNav.vue';
 import Action from '@/components/Action.vue';
+import Empty from '@/components/Empty.vue';
+import { PREFIX, actions } from '@/store/modules/user/CONSTANTS';
+import { User } from '@/store/modules/user/user';
+import { Action as ActionType } from '@/store/modules/list/list';
+import { getUserActions } from '@/api/user';
 import px2px from '@/util/px2px.ts';
+
+type tabType = 'liked' | 'going' | 'past';
 
 @Component({
   components: {
     AppIcon,
     TopNav,
     Action,
+    Empty,
   },
 })
 export default class Me extends Vue {
-  private co = Action;
+  private type: tabType = 'liked';
+  private actions: Array<ActionType> = [];
+  private get user() {
+    return this.$store.state[PREFIX];
+  }
   private get iconStyle() {
     return `fontSize:${px2px(36)}`;
   }
   private navagateToHome() {
     this.$router.push({ name: 'home' });
+  }
+  private created() {
+    this.$store.dispatch(actions.getUserInfo);
+    this.getTabData();
+  }
+  private changeTab(type: tabType) {
+    this.type = type;
+    this.getTabData();
+  }
+  private getTabData() {
+    let cancelLoading = this.$loading();
+    getUserActions({ type: this.type })
+      .then(
+        ({
+          events,
+          has_more,
+        }: {
+          events: Array<ActionType>;
+          has_more: boolean;
+        }) => {
+          this.actions = [...events];
+          cancelLoading();
+        },
+      )
+      .catch((e: Error) => {
+        cancelLoading();
+        this.$toast(e.message);
+      });
   }
 }
 </script>

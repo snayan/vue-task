@@ -16,7 +16,7 @@ import px2px from '@/util/px2px';
   },
 })
 export default class Empty extends Vue {
-  @Prop({required:true,default:'No result found'}) private tip!:string;
+  @Prop({default:'No result found'}) private tip!:string;
   @Prop([Object,String]) private emptyStyle!:null;
   private get iconStyle(){
     return {
