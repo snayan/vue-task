@@ -25,7 +25,14 @@ import SearchSlide from '@/components/SearchSlide.vue';
 import SearchResult from '@/components/SearchResult.vue';
 import Empty from '@/components/Empty.vue';
 import { actions, PREFIX } from '@/store/modules/list/CONSTANTS';
+import { WinInfo } from '@/plugins/Scrolling/index.d';
 import px2px from '@/util/px2px';
+
+/* 距离底部距离触发加载 */
+const LIMIT = 400;
+
+let isLock = false;
+let preScrollHeight = 0;
 
 @Component({
   components: {
@@ -56,6 +63,9 @@ export default class Home extends Vue {
   private get lists() {
     return this.$store.state[PREFIX]['data'];
   }
+  private get hasMore() {
+    return this.$store.state[PREFIX]['has_more'];
+  }
   private toggleSlide() {
     this.open = !this.open;
   }
@@ -73,6 +83,34 @@ export default class Home extends Vue {
   }
   private created() {
     this.$store.dispatch(actions.getList);
+  }
+  private scrolling(w: WinInfo) {
+    let totalHeight = this.$el.scrollHeight;
+    let rectHeight = this.$el.getBoundingClientRect().height;
+    let scrollHeight = w.scrollY;
+    if (
+      this.hasMore &&
+      !isLock &&
+      preScrollHeight < scrollHeight &&
+      totalHeight - rectHeight - scrollHeight < LIMIT
+    ) {
+      isLock = true;
+      let cancelLoading = this.$loading();
+      this.$store
+        .dispatch(actions.getMoreList, {
+          offset: this.lists.length,
+        })
+        .then(() => {
+          isLock = false;
+          cancelLoading();
+        })
+        .catch((e: Error) => {
+          isLock = false;
+          cancelLoading();
+          this.$toast(e.message);
+        });
+    }
+    preScrollHeight = scrollHeight;
   }
 }
 </script>
