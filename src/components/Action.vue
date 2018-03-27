@@ -24,11 +24,11 @@
       <div class="operation">
         <div class=" item go">
           <app-icon link="#icon-right" :iconStyle="goIconStyle" />
-          <span>{{item.me_going?'I am going!':`${item.going_count} Going`}}</span>
+          <span>{{item.me_going?'I am going!':`${item.going_count||0} Going`}}</span>
         </div>
         <div class="item like">
           <app-icon link="#icon-custom-love" :iconStyle="likeIconStyle" />
-          <span>{{item.me_likes?'I like it':`${item.likes_count} Likes`}}</span>
+          <span>{{item.me_likes?'I like it':`${item.likes_count||0} Likes`}}</span>
         </div>
       </div>
     </section>

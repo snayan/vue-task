@@ -4,8 +4,8 @@ import Toast from './Toast.vue';
 type ShowFunc = (msg: string) => void;
 
 const plugin: PluginObject<{}> = {
-  install(VueC: VueConstructor) {
-    const CONSTRUCTOR = VueC.extend(Toast);
+  install(Vue: VueConstructor) {
+    const CONSTRUCTOR = Vue.extend(Toast);
     let cache: Vue & { show: ShowFunc } | null = null;
 
     function toast(msg: string, options = {}) {
@@ -16,7 +16,7 @@ const plugin: PluginObject<{}> = {
       }
       toastComponent.show(msg);
     }
-    VueC.prototype.$toast = toast;
+    Vue.prototype.$toast = toast;
   },
 };
 

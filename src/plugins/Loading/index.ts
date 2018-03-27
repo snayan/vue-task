@@ -4,8 +4,8 @@ import Loading from './Loading.vue';
 type ShowFunc = () => () => void;
 
 const plugin: PluginObject<{}> = {
-  install(VueC: VueConstructor, options = {}) {
-    const CONSTRUCTOR = VueC.extend(Loading);
+  install(Vue: VueConstructor, options = {}) {
+    const CONSTRUCTOR = Vue.extend(Loading);
     let cache: Vue & { show: ShowFunc } | null = null;
 
     function loading(): () => void {
@@ -16,7 +16,7 @@ const plugin: PluginObject<{}> = {
       }
       return loadingComponent.show();
     }
-    VueC.prototype.$loading = loading;
+    Vue.prototype.$loading = loading;
   },
 };
 

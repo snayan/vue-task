@@ -3,14 +3,14 @@ import MScroll from './mscroll';
 
 let installed = false;
 
-const plugin: PluginObject<{}> = {
-  install(VueC) {
+const plugin: PluginObject<null> = {
+  install(Vue: VueConstructor) {
     if (installed) {
       return;
     }
     installed = true;
-    VueC.mixin({
-      created() {
+    Vue.mixin({
+      created(this: Vue) {
         const { methods } = this.$options;
         if (methods) {
           const hasBindScrolling =
@@ -28,12 +28,12 @@ const plugin: PluginObject<{}> = {
           }
         }
       },
-      mounted() {
+      mounted(this: Vue) {
         if (this.$msroll && this.$msroll instanceof MScroll) {
           this.$msroll.bindEvent();
         }
       },
-      destroyed() {
+      destroyed(this: Vue) {
         if (this.$msroll && this.$msroll instanceof MScroll) {
           this.$msroll.unbindEvent();
         }
