@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue, { VueConstructor } from 'vue';
 /* 移动端滑动优化 */
 
 export interface WinInfo {
@@ -7,40 +7,36 @@ export interface WinInfo {
   gap: number;
 }
 
-let noopFunction = () => null;
-
-function listener(this: MobileScroll) {
-  if (!this.rafingMark) {
-    this.startRaf();
-  }
-}
+const noopFunction = () => null;
 
 type CbType = (p: WinInfo) => void;
 
 let passiveSupported: boolean = false;
 try {
-  var options = Object.defineProperty({}, 'passive', {
-    get: function() {
+  const options = Object.defineProperty({}, 'passive', {
+    get() {
       passiveSupported = true;
     },
   });
 
   window.addEventListener('test', noopFunction, options);
-} catch (err) {}
+} catch (err) {
+  console.log(err);
+}
 
 class MobileScroll {
-  nowY: number;
-  lastY: number;
-  direction: number;
-  rafMark: number;
-  rafingMark: boolean;
-  gap: number;
-  scrollList: Array<CbType>;
-  scrollEndList: Array<CbType>;
-  vm: Vue;
-  listener: () => void;
+  private nowY: number;
+  private lastY: number;
+  private direction: number;
+  private rafMark: number;
+  private rafingMark: boolean;
+  private gap: number;
+  private scrollList: CbType[];
+  private scrollEndList: CbType[];
+  private vm: Vue;
+  private listener: () => void;
   constructor(vm: Vue) {
-    let sy = window.scrollY;
+    const sy = window.scrollY;
     this.scrollList = [];
     this.scrollEndList = [];
     this.nowY = sy;
@@ -50,23 +46,41 @@ class MobileScroll {
     this.rafingMark = false;
     this.gap = 0;
     this.vm = vm;
-    this.listener = listener.bind(this);
+    this.listener = () => {
+      if (!this.rafingMark) {
+        this.startRaf();
+      }
+    };
   }
   /* 添加滚动监听事件 */
-  onScroll(cb: CbType) {
+  public onScroll(cb: CbType) {
     if (typeof cb === 'function') {
       this.scrollList.push(cb.bind(this.vm));
     }
   }
   /* 添加滚动结束事件 */
-  onScrollEnd(cb: CbType) {
+  public onScrollEnd(cb: CbType) {
     if (typeof cb === 'function') {
       this.scrollEndList.push(cb.bind(this.vm));
     }
   }
+  /* 监听window滚动事件 */
+  public bindEvent() {
+    const options = passiveSupported ? { passive: true } : false;
+    const el = this.vm.$el;
+    if (el) {
+      el.addEventListener('scroll', this.listener, options);
+    }
+  }
+  public unbindEvent() {
+    const el = this.vm.$el;
+    if (el) {
+      el.removeEventListener('scroll', this.listener);
+    }
+  }
   /* 滚动结束时会调用 */
-  scrollEnd() {
-    let winInfo: WinInfo = {
+  private scrollEnd() {
+    const winInfo: WinInfo = {
       scrollY: this.nowY,
       direction: this.direction,
       gap: Math.abs(this.gap),
@@ -75,20 +89,20 @@ class MobileScroll {
       try {
         this.scrollEndList[i](winInfo);
       } catch (e) {
-        console.warn(e);
+        console.log(e);
       }
     }
     this.endRaf();
   }
   /* 正在滚动时会调用 */
-  scrolling() {
+  private scrolling() {
     this.nowY = this.vm.$el.scrollTop;
     this.gap = this.nowY - this.lastY;
     if (this.gap) {
-      //正在滑动，1为向上滑动，-1为向下滑动
+      // 正在滑动，1为向上滑动，-1为向下滑动
       this.direction = ((+(this.gap > 0) | 0) - 0.5) * 2;
       this.lastY = this.nowY;
-      let winInfo: WinInfo = {
+      const winInfo: WinInfo = {
         scrollY: this.nowY,
         direction: this.direction,
         gap: this.gap,
@@ -106,28 +120,14 @@ class MobileScroll {
     }
   }
   /* 开启raf */
-  startRaf() {
+  private startRaf() {
     this.rafMark = window.requestAnimationFrame(this.scrolling.bind(this));
     this.rafingMark = true;
   }
   /* 结束raf */
-  endRaf() {
+  private endRaf() {
     window.cancelAnimationFrame(this.rafMark);
     this.rafingMark = false;
-  }
-  /* 监听window滚动事件 */
-  bindEvent() {
-    let options = passiveSupported ? { passive: true } : false;
-    let el = this.vm.$el;
-    if (el) {
-      el.addEventListener('scroll', this.listener, options);
-    }
-  }
-  unbindEvent() {
-    let el = this.vm.$el;
-    if (el) {
-      el.removeEventListener('scroll', this.listener);
-    }
   }
 }
 

@@ -8,15 +8,15 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop ,Vue } from 'vue-property-decorator';
+import { Component, Prop , Vue } from 'vue-property-decorator';
 import {PREFIX} from '@/store/modules/list/CONSTANTS';
 
 @Component
 export default class SearchResult extends Vue {
-  @Prop({required:true,default:false}) private down!:boolean;
-  @Prop({required:true,default:''}) private tip!:string;
-  private get count(){
-    return this.$store.state[PREFIX]['data'].length||0;
+  @Prop({required: true, default: false}) private down!: boolean;
+  @Prop({required: true, default: ''}) private tip!: string;
+  private get count() {
+    return this.$store.state[PREFIX].data.length || 0;
   }
   private clear() {
     this.$emit('clear', this.$el.getBoundingClientRect().height);

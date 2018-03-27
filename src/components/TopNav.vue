@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Component, Prop, Emit , Vue } from 'vue-property-decorator';
 import AppIcon from './AppIcon.vue';
-import {PREFIX} from '@/store/modules/user/CONSTANTS'
+import {PREFIX} from '@/store/modules/user/CONSTANTS';
 import px2px from '@/util/px2px';
 
 @Component({
@@ -33,7 +33,7 @@ export default class TopNav extends Vue {
   private get iconSize() {
     return px2px(48);
   }
-  private get avatar(){
+  private get avatar() {
     return this.$store.state[PREFIX].avatar;
   }
   private clickLeft() {

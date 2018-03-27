@@ -63,23 +63,23 @@ export default class AppAction extends Vue {
       flex: '0 0 auto',
     };
   }
-  private get goIconStyle(){
+  private get goIconStyle() {
     return {
-      fontSize:px2px(24),
-      color:this.item.me_going?'#AECB4F':'#AC8EC9'
-    }
+      fontSize: px2px(24),
+      color: this.item.me_going ? '#AECB4F' : '#AC8EC9',
+    };
   }
-  private get likeIconStyle(){
+  private get likeIconStyle() {
     return {
-      fontSize:px2px(24),
-      color:this.item.me_likes?'#FF5C5C':'#AC8EC9',
-    }
+      fontSize: px2px(24),
+      color: this.item.me_likes ? '#FF5C5C' : '#AC8EC9',
+    };
   }
-  private get actionTime(){
-    return toLocalString(this.item.begin_time)+' - '+toLocalString(this.item.end_time);
+  private get actionTime() {
+    return toLocalString(this.item.begin_time) + ' - ' + toLocalString(this.item.end_time);
   }
-  private get navagateTo(){
-    return '/home/'+this.item.id;
+  private get navagateTo() {
+    return '/home/' + this.item.id;
   }
 }
 </script>

@@ -13,7 +13,7 @@ export interface LoginInfo {
 export function login({ username, password }: LoginInfo) {
   return internalFetch('POST')(true)(stringifPath(PATH), {
     body: { username, password },
-  })
+  });
 }
 
 /* 退出 */

@@ -15,15 +15,15 @@ const state = () => ({
 });
 
 const actions: ActionTree<Filter, RootState> = {
-  getChannels({ commit, state }) {
-    return getChannels().then(({ channels }: { channels: Array<Channel> }) => {
+  getChannels({ commit }) {
+    return getChannels().then(({ channels }: { channels: Channel[] }) => {
       commit('updateChannels', channels);
     });
   },
 };
 
 const mutations: MutationTree<Filter> = {
-  updateChannels(state, channels: Array<Channel>) {
+  updateChannels(state , channels: Channel[]) {
     state.channels = [ ...channels];
   },
 };

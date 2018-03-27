@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop ,Vue } from 'vue-property-decorator';
+import { Component, Prop , Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import {postCommentsByAId} from '@/api/comment';
 import px2px from '@/util/px2px.ts';
@@ -24,10 +24,10 @@ import px2px from '@/util/px2px.ts';
   },
 })
 export default class DetailReply extends Vue {
-  private msg:string='';
-  @Prop() private show!:boolean;
-  @Prop({required:false,default:'Leave your comment here'}) private tip!:string;
-  private get actionId(){
+  private msg: string = '';
+  @Prop() private show!: boolean;
+  @Prop({required: false, default: 'Leave your comment here'}) private tip!: string;
+  private get actionId() {
     return this.$route.params.id;
   }
   private get closeStyle() {
@@ -39,20 +39,20 @@ export default class DetailReply extends Vue {
       height: px2px(48),
     };
   }
-  private close(){
+  private close() {
     this.$emit('close');
   }
-  private send(){
-    if(this.msg && this.actionId){
-      let cancelLoading= this.$loading();
-      postCommentsByAId(this.actionId,this.msg).then(()=>{
-        this.$emit('send',this.msg)
+  private send() {
+    if (this.msg && this.actionId) {
+      const cancelLoading = this.$loading();
+      postCommentsByAId(this.actionId, this.msg).then(() => {
+        this.$emit('send', this.msg);
         cancelLoading();
-        this.msg='';
-      }).catch((e:Error)=>{
+        this.msg = '';
+      }).catch((e: Error) => {
         cancelLoading();
         this.$toast(e.message);
-      })
+      });
     }
   }
 }

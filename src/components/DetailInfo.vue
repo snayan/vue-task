@@ -37,7 +37,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import px2px from '@/util/px2px';
-import {toLocalString,toLocalTime} from '@/util/date';
+import {toLocalString, toLocalTime} from '@/util/date';
 
 @Component({
   components: {
@@ -45,22 +45,22 @@ import {toLocalString,toLocalTime} from '@/util/date';
   },
 })
 export default class DetailInfo extends Vue {
-  @Prop({required:false,type:Array}) private images!:Array<string>;
-  @Prop({required:true}) private description!:string;
-  @Prop({required:true}) private begin!:string;
-  @Prop({required:true}) private end!:string;
-  @Prop({required:true}) private location!:string;
-  @Prop({required:true}) private address!:string;
-  private get beginDate(){
+  @Prop({required: false, type: Array}) private images!: string[];
+  @Prop({required: true}) private description!: string;
+  @Prop({required: true}) private begin!: string;
+  @Prop({required: true}) private end!: string;
+  @Prop({required: true}) private location!: string;
+  @Prop({required: true}) private address!: string;
+  private get beginDate() {
     return toLocalString(this.begin);
   }
-  private get beginTime(){
+  private get beginTime() {
     return toLocalTime(this.begin);
   }
-  private get endDate(){
+  private get endDate() {
     return toLocalString(this.end);
   }
-  private get endTime(){
+  private get endTime() {
     return toLocalTime(this.end);
   }
 }

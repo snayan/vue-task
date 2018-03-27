@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Watch ,Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Watch , Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import { PREFIX, actions } from '@/store/modules/filter/CONSTANTS';
 import { Channel, Date } from '@/store/modules/filter/filter';
@@ -40,8 +40,8 @@ import px2px from '@/util/px2px.ts';
 })
 export default class SlideSearch extends Vue {
   private time: Date | null = null;
-  private channels: Array<Channel> = [];
-  @Prop({required:true,default:false}) private clear!:boolean;
+  private channels: Channel[] = [];
+  @Prop({required: true, default: false}) private clear!: boolean;
   private get active() {
     return !!(this.time || this.channels.length);
   }
@@ -70,10 +70,10 @@ export default class SlideSearch extends Vue {
     return val;
   }
   private get getDates() {
-    return this.$store.state[PREFIX]['dates'];
+    return this.$store.state[PREFIX].dates;
   }
   private get getChannels() {
-    return this.$store.state[PREFIX]['channels'];
+    return this.$store.state[PREFIX].channels;
   }
   private get isSelectedAllChannel() {
     return this.channels.length === this.getChannels.length;
@@ -82,9 +82,9 @@ export default class SlideSearch extends Vue {
     this.time = this.time === item ? null : item;
   }
   private changeChannel(item: Channel) {
-    let channels = this.channels.filter(v => v.id === item.id);
+    const channels = this.channels.filter((v) => v.id === item.id);
     if (channels.length) {
-      this.channels = this.channels.filter(v => v.id !== item.id);
+      this.channels = this.channels.filter((v) => v.id !== item.id);
     } else {
       this.channels = [...this.channels, item];
     }
@@ -97,13 +97,13 @@ export default class SlideSearch extends Vue {
     if (!this.active) {
       return false;
     }
-    let params = Object.create(null);
+    const params = Object.create(null);
     if (this.time && this.time.value !== 'all') {
       params.after = this.time.start;
       params.before = this.time.end;
     }
     if (this.channels.length) {
-      params.channels = this.channels.map(v => v.id).join(',');
+      params.channels = this.channels.map((v) => v.id).join(',');
     }
     this.$store.dispatch(listActions.getList, params);
     this.$emit('search', this.searchTip);
@@ -112,9 +112,9 @@ export default class SlideSearch extends Vue {
     this.$store.dispatch(actions.getChannels);
   }
   @Watch('clear')
-  private clearSearch(){
-    this.time=null;
-    this.channels=[];
+  private clearSearch() {
+    this.time = null;
+    this.channels = [];
   }
 }
 </script>

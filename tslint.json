@@ -1,9 +1,12 @@
 {
   "defaultSeverity": "warning",
-  "extends": [
-    "tslint:recommended"
-  ],
+  "extends": ["tslint:recommended"],
   "rules": {
+    "no-console": false,
+    "no-bitwise": false,
+    "no-shadowed-variable": false,
+    "prefer-const": false,
+    "no-string-literal": false,
     "quotemark": [true, "single"],
     "indent": [true, "spaces", 2],
     "interface-name": false,

@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop,  Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import px2px from '@/util/px2px';
 
@@ -16,13 +16,13 @@ import px2px from '@/util/px2px';
   },
 })
 export default class Empty extends Vue {
-  @Prop({default:'No result found'}) private tip!:string;
-  @Prop([Object,String]) private emptyStyle!:null;
-  private get iconStyle(){
+  @Prop({default: 'No result found'}) private tip!: string;
+  @Prop([Object, String]) private emptyStyle!: null;
+  private get iconStyle() {
     return {
-      fontSize:px2px(120),
-      color:'#D3C1E5'
-    }
+      fontSize: px2px(120),
+      color: '#D3C1E5',
+    };
   }
 }
 </script>

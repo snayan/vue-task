@@ -4,18 +4,18 @@ import MScroll from './mscroll';
 let installed = false;
 
 const plugin: PluginObject<{}> = {
-  install(Vue: VueConstructor) {
+  install(VueC) {
     if (installed) {
       return;
     }
     installed = true;
-    Vue.mixin({
+    VueC.mixin({
       created() {
-        let { methods } = this.$options;
+        const { methods } = this.$options;
         if (methods) {
-          let hasBindScrolling =
+          const hasBindScrolling =
             methods.scrolling && typeof methods.scrolling === 'function';
-          let hasBindScrollend =
+          const hasBindScrollend =
             methods.scrollend && typeof methods.scrollend === 'function';
           if (hasBindScrolling || hasBindScrollend) {
             this.$msroll = new MScroll(this);

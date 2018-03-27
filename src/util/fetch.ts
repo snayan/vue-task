@@ -10,7 +10,7 @@ interface FetchParams {
 
 /*  检查返回状态 */
 function checkStatus(type: 'GET' | 'POST' | 'DELETE') {
-  return function(res: Response) {
+  return (res: Response) => {
     const { status } = res;
     if (status >= 200 && status < 300) {
       return res.text().then((v) => v && JSON.parse(v));
@@ -47,9 +47,9 @@ export function internalFetch(type: 'GET' | 'POST' | 'DELETE') {
         }
       }
       return fetch(path, {
+        headers,
         method: type,
         body: stringifyBody,
-        headers: headers,
         mode: 'same-origin',
       }).then(checkStatus(type));
     };

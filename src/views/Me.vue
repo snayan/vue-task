@@ -56,7 +56,7 @@ type tabType = 'liked' | 'going' | 'past';
 })
 export default class Me extends Vue {
   private type: tabType = 'liked';
-  private actions: Array<ActionType> = [];
+  private actions: ActionType[] = [];
   private get user() {
     return this.$store.state[PREFIX];
   }
@@ -82,7 +82,7 @@ export default class Me extends Vue {
           events,
           has_more,
         }: {
-          events: Array<ActionType>;
+          events: ActionType[];
           has_more: boolean;
         }) => {
           this.actions = [...events];

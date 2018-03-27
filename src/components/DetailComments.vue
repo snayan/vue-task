@@ -13,7 +13,7 @@
   </ul>
 </template>
 <script lang="ts">
-import { Component, Prop,Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import { User } from '@/store/modules/user/user';
 import px2px from '@/util/px2px.ts';
@@ -31,7 +31,7 @@ interface Comment {
   },
 })
 export default class DetailComments extends Vue {
-  @Prop({required:true,default:[],type:Array}) private comments!: Array<Comment>;
+  @Prop({required: true, default: [], type: Array}) private comments!: Comment[];
   private get actionId() {
     return this.$route.params.id;
   }
@@ -42,8 +42,8 @@ export default class DetailComments extends Vue {
       verticalAlign: 'text-top',
     };
   }
-  private reply(user:User){
-    this.$emit('reply',user);
+  private reply(user: User) {
+    this.$emit('reply', user);
   }
 }
 </script>

@@ -34,21 +34,21 @@ import { User } from '@/store/modules/user/user';
   },
 })
 export default class DetailParticipants extends Vue {
-  private participants: Array<User> = [];
-  private likes: Array<User> = [];
+  private participants: User[] = [];
+  private likes: User[] = [];
   private get actionId() {
     return this.$route.params.id;
   }
   private created() {
     getParticipantsByAId(this.actionId)
-      .then(({ users }: { users: Array<User> }) => {
+      .then(({ users }: { users: User[] }) => {
         this.participants = [...users];
       })
       .catch((e: Error) => {
         this.$toast(e.message);
       });
     getLikesByAId(this.actionId)
-      .then(({ users }: { users: Array<User> }) => {
+      .then(({ users }: { users: User[] }) => {
         this.likes = [...users];
       })
       .catch((e: Error) => {

@@ -17,7 +17,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop,  Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import px2px from '@/util/px2px.ts';
 
@@ -27,9 +27,9 @@ import px2px from '@/util/px2px.ts';
   },
 })
 export default class DetailOperation extends Vue {
-  @Prop({required:true,default:false}) private hasJoin!:boolean;
-  @Prop({required:true,default:false}) private hasLike!:boolean;
-  private get iconReplyStyle(){
+  @Prop({required: true, default: false}) private hasJoin!: boolean;
+  @Prop({required: true, default: false}) private hasLike!: boolean;
+  private get iconReplyStyle() {
     return {
       color: '#000000',
       fontSize: px2px(48),
@@ -37,23 +37,23 @@ export default class DetailOperation extends Vue {
   }
   private get iconLikeStyle() {
     return {
-      color: this.hasLike?'#D5EF7F':'#000000',
+      color: this.hasLike ? '#D5EF7F' : '#000000',
       fontSize: px2px(48),
     };
   }
-  private get iconJoinStyle(){
+  private get iconJoinStyle() {
     return {
-      color: this.hasJoin?'#8560a9':'#000000',
+      color: this.hasJoin ? '#8560a9' : '#000000',
       fontSize: px2px(48),
     };
   }
-  private reply(){
+  private reply() {
     this.$emit('reply');
   }
-  private toggleLike(){
+  private toggleLike() {
     this.$emit('toggleLike');
   }
-  private toggleJoin(){
+  private toggleJoin() {
     this.$emit('toggleJoin');
   }
 

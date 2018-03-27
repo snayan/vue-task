@@ -70,7 +70,7 @@ export default class Detail extends Vue {
   private showReply: boolean = false;
   private replyTip: string = 'Leave your comment here';
   private actionData: Action | null = null;
-  private comments: Array<Comment> = [];
+  private comments: Comment[] = [];
   private get actionId() {
     return this.$route.params.id;
   }
@@ -148,7 +148,7 @@ export default class Detail extends Vue {
         this.$toast(e.message);
       });
     getComnentsByAId(this.actionId)
-      .then(({ comments }: { comments: Array<Comment> }) => {
+      .then(({ comments }: { comments: Comment[] }) => {
         this.comments = [...comments];
       })
       .catch((e: Error) => {

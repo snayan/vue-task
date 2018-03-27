@@ -26,7 +26,7 @@ const getters: GetterTree<List, RootState> = {
 const actions: ActionTree<List, RootState> = {
   getList({ commit, state }, payload: Filter) {
     return getActions(payload).then(
-      ({ events, hasMore }: { events: Array<Action>; hasMore: boolean }) => {
+      ({ events, hasMore }: { events: Action[]; hasMore: boolean }) => {
         commit('updateList', events);
         commit('updateHasMore', hasMore);
       },
@@ -35,7 +35,7 @@ const actions: ActionTree<List, RootState> = {
   getMoreList({ commit, state }, payload: Filter) {
     if (state.has_more) {
       return getActions(payload).then(
-        ({ events, hasMore }: { events: Array<Action>; hasMore: boolean }) => {
+        ({ events, hasMore }: { events: Action[]; hasMore: boolean }) => {
           commit('appendList', events);
           commit('updateHasMore', hasMore);
         },

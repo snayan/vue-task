@@ -3,7 +3,7 @@ import MobileScroll, { WinInfo } from './mscroll';
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $ms: MobileScroll;
+    $msroll: MobileScroll;
   }
 }
 
