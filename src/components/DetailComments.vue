@@ -1,31 +1,29 @@
 <template>
   <ul class="comments">
-    <li class="item">
-      <img class="avator" src="../assets/imgs/action.jpg" />
+    <li class="item" v-for="item in comments" :key="item.id">
+      <img class="avator" :src="item.user.avatar" />
       <div class="txt">
-        <p class="user">Little Prince<span>9 hours ago</span></p>
-        <p class="msg">Nullam ut tincidunt nunc. Petus lacus, commodo eget justo ut, rutrum varius nunc.</p>
+        <p class="user">{{item.user.username}}<span>{{item.create_time}}</span></p>
+        <p class="msg">{{item.comment}}</p>
       </div>
-      <a class="reply">
-        <app-icon link="#icon-reply" :iconStyle="iconStyle" />
-      </a>
-    </li>
-    <li class="item">
-      <img class="avator" src="../assets/imgs/action.jpg" />
-      <div class="txt">
-        <p class="user">Little Prince<span>9 hours ago</span></p>
-        <p class="msg">Nullam ut tincidunt nunc. Petus lacus, commodo eget justo ut, rutrum varius nunc.</p>
-      </div>
-      <a class="reply">
+      <a class="reply" @click.stop.prevent="reply(item.user)">
         <app-icon link="#icon-reply" :iconStyle="iconStyle" />
       </a>
     </li>
   </ul>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop,Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
+import { User } from '@/store/modules/user/user';
 import px2px from '@/util/px2px.ts';
+
+interface Comment {
+  id: number;
+  create_time: string;
+  comment: string;
+  user: User;
+}
 
 @Component({
   components: {
@@ -33,11 +31,19 @@ import px2px from '@/util/px2px.ts';
   },
 })
 export default class DetailComments extends Vue {
+  @Prop({required:true,default:[],type:Array}) private comments!: Array<Comment>;
+  private get actionId() {
+    return this.$route.params.id;
+  }
   private get iconStyle() {
     return {
       fontSize: px2px(48),
       color: '#D5EF7F',
+      verticalAlign: 'text-top',
     };
+  }
+  private reply(user:User){
+    this.$emit('reply',user);
   }
 }
 </script>

@@ -14,9 +14,6 @@ export function postParticipantsByAId(actionId: string) {
 }
 
 /* 删除指定活动指定用户的参与 */
-export function deleteParticipantsByAIdAndUId(
-  actionId: string,
-  userId: string,
-) {
-  return deletx(stringifPath(`${PATH.replace('$A', actionId)}/${userId}`));
+export function deleteParticipantsByAId(actionId: string) {
+  return deletx(stringifPath(`${PATH.replace('$A', actionId)}`));
 }

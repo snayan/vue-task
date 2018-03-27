@@ -1,6 +1,6 @@
 <template>
   <div class="me">
-    <top-nav left="#icon-home" right="#icon-caidan08" />
+    <top-nav left="#icon-home" @left="navagateToHome" right="#icon-caidan08" />
     <div class="content">
       <div class="info">
         <img class="avator" src="../assets/imgs/action.jpg" />
@@ -47,6 +47,9 @@ export default class Me extends Vue {
   private co = Action;
   private get iconStyle() {
     return `fontSize:${px2px(36)}`;
+  }
+  private navagateToHome() {
+    this.$router.push({ name: 'home' });
   }
 }
 </script>

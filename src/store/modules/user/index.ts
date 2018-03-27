@@ -1,6 +1,6 @@
 import { ActionTree, MutationTree, ActionContext } from 'vuex';
 import { login, loginOut, LoginInfo } from '@/api/login';
-// import {} from '@/api/user';
+import { getUserInfo, getUserActions } from '@/api/user';
 import { User } from './user';
 import { RootState } from '../../rootstate';
 
@@ -26,6 +26,11 @@ const actions: ActionTree<User, RootState> = {
         commit('saveUser', user);
       },
     );
+  },
+  getUserInfo({ commit, state }: ActionContext<User, RootState>) {
+    return getUserInfo().then((user: User) => {
+      commit('saveUser', user);
+    });
   },
 };
 

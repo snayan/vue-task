@@ -1,6 +1,6 @@
 /* fetch api  */
 
-import { getCookie } from '@/util/cookie';
+import { getCookie, removeCookie } from '@/util/cookie';
 import { TOKEN } from '@/util/session';
 
 interface FetchParams {
@@ -9,16 +9,19 @@ interface FetchParams {
 }
 
 /*  检查返回状态 */
-function checkStatus(res: Response) {
-  const { status } = res;
-  if (status >= 200 && status < 300) {
-    return res.json();
-  } else if (status === 403) {
-    // invalid token then go login
-    return (window.location.href = '/');
-  } else {
-    throw new Error(`[${status}]:${res.statusText}`);
-  }
+function checkStatus(type: 'GET' | 'POST' | 'DELETE') {
+  return function(res: Response) {
+    const { status } = res;
+    if (status >= 200 && status < 300) {
+      return res.text().then((v) => v && JSON.parse(v));
+    } else if (status === 403) {
+      // invalid token then go login
+      removeCookie(TOKEN);
+      return (window.location.href = '/');
+    } else {
+      throw new Error(`[${status}]:${res.statusText}`);
+    }
+  };
 }
 
 export function internalFetch(type: 'GET' | 'POST' | 'DELETE') {
@@ -26,12 +29,12 @@ export function internalFetch(type: 'GET' | 'POST' | 'DELETE') {
     return (path: string, options: FetchParams = {}) => {
       let { headers, body } = options;
       headers = headers instanceof Headers ? headers : new Headers();
-      headers.set('Content-Type', 'application/json');
       if (!isGetToken) {
         headers.set(TOKEN, getCookie(TOKEN));
       }
       let stringifyBody;
       if (body) {
+        headers.set('Content-Type', 'application/json');
         let keys = Object.keys(body);
         if (type === 'GET') {
           stringifyBody = keys
@@ -48,7 +51,7 @@ export function internalFetch(type: 'GET' | 'POST' | 'DELETE') {
         body: stringifyBody,
         headers: headers,
         mode: 'same-origin',
-      }).then(checkStatus);
+      }).then(checkStatus(type));
     };
   };
 }

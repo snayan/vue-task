@@ -19,6 +19,6 @@ export function postLikesByAId(actionId: string) {
 }
 
 /* 删除特定活动的喜欢 */
-export function deleteLikesByAIdAndUId(actionId: string, userId: string) {
-  return deletx(stringifPath(`${PATH.replace('$A', actionId)}/${userId}`));
+export function deleteLikesByAId(actionId: string) {
+  return deletx(stringifPath(`${PATH.replace('$A', actionId)}`));
 }

@@ -7,6 +7,8 @@ interface CookieOptions {
   secure?: boolean;
 }
 
+export const defaultExpires = 7 * 24 * 60 * 60 * 1000;
+
 /* 获取cookie */
 export function getCookie(name: string): string {
   const matcher = document.cookie.match(RegExp('(?:^| )' + name + '=([^;]*)'));
@@ -28,7 +30,7 @@ export function setCookie(
   let stringifiedAttributes: string = '';
   const attributes: CookieOptions = {
     path: '/',
-    expires: 7 * 24 * 60 * 60 * 1000,
+    expires: defaultExpires,
     ...options,
   };
   if (typeof attributes.expires === 'number') {
@@ -58,5 +60,5 @@ export function setCookie(
 
 /* 删除cookie */
 export function removeCookie(name: string): boolean {
-  return setCookie(name, '', { expires: -1 });
+  return setCookie(name, '', { expires: -defaultExpires });
 }

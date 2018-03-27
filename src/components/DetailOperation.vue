@@ -1,23 +1,23 @@
 <template>
   <div class="operation">
     <div class="left">
-      <button class="reply">
-        <app-icon link='#icon-xiaoxi' :iconStyle="iconStyle" />
+      <button class="reply" @click.stop.prevent="reply">
+        <app-icon link='#icon-xiaoxi' :iconStyle="iconReplyStyle" />
       </button>
-      <button class="like">
-        <app-icon link='#icon-custom-love' :iconStyle="iconStyle" />
+      <button class="like" @click.stop.prevent="toggleLike">
+        <app-icon :link="hasLike?'#icon-icons-1':'#icon-custom-love'" :iconStyle="iconLikeStyle" />
       </button>
     </div>
-    <div class="right">
-      <button class="join">
-        <app-icon link='#icon-right' :iconStyle="iconStyle" />
-        <span>Join</span>
+    <div class="right" >
+      <button class="join" @click.stop.prevent="toggleJoin">
+        <app-icon link='#icon-right' :iconStyle="iconJoinStyle" />
+        <span>{{hasJoin?'I am going':'Join'}}</span>
       </button>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop,  Vue } from 'vue-property-decorator';
 import AppIcon from '@/components/AppIcon.vue';
 import px2px from '@/util/px2px.ts';
 
@@ -27,12 +27,36 @@ import px2px from '@/util/px2px.ts';
   },
 })
 export default class DetailOperation extends Vue {
-  private get iconStyle() {
+  @Prop({required:true,default:false}) private hasJoin!:boolean;
+  @Prop({required:true,default:false}) private hasLike!:boolean;
+  private get iconReplyStyle(){
     return {
       color: '#000000',
       fontSize: px2px(48),
     };
   }
+  private get iconLikeStyle() {
+    return {
+      color: this.hasLike?'#D5EF7F':'#000000',
+      fontSize: px2px(48),
+    };
+  }
+  private get iconJoinStyle(){
+    return {
+      color: this.hasJoin?'#8560a9':'#000000',
+      fontSize: px2px(48),
+    };
+  }
+  private reply(){
+    this.$emit('reply');
+  }
+  private toggleLike(){
+    this.$emit('toggleLike');
+  }
+  private toggleJoin(){
+    this.$emit('toggleJoin');
+  }
+
 }
 </script>
 
@@ -72,6 +96,12 @@ export default class DetailOperation extends Vue {
 .join {
   @include px2px(font-size,28);
   color: #788c36;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  span {
+    margin-left: 24px;
+  }
 }
 </style>
 

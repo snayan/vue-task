@@ -1,6 +1,7 @@
 import { get } from '@/util/fetch';
-
-const PATH = '/user/$U';
+import { stringifPath } from './index';
+import { hasLogin } from '@/util/session';
+const PATH = '/user';
 
 interface Filter {
   type: 'liked' | 'going' | 'past';
@@ -9,13 +10,13 @@ interface Filter {
 }
 
 /* 获取用户信息 */
-export function getUserInfo(userId: string) {
-  return get(PATH.replace('$U', userId));
+export function getUserInfo() {
+  return hasLogin() ? get(stringifPath(PATH)) : Promise.resolve({});
 }
 
 /* 获取用户的喜欢和参与 */
-export function getUserActions(userId: string, options: Filter) {
-  return get(`${PATH.replace('$U', userId)}/events`, {
+export function getUserActions(options: Filter) {
+  return get(stringifPath(`${PATH}/events`), {
     body: { offset: 0, limit: 25, ...options },
   });
 }
