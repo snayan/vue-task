@@ -40,7 +40,7 @@ import AppIcon from '@/components/AppIcon.vue';
 import Channel from '@/components/Channel.vue';
 import px2px from '@/util/px2px';
 import { toLocalString } from '@/util/date';
-import { Action } from '@/store/modules/list/list.d';
+import { Action } from '@/store/modules/list/list.d.ts';
 
 @Component({
   components: {
